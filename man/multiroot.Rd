@@ -10,7 +10,7 @@ multiroot(
   ...,
   tolerance = .Machine$double.eps,
   maxiter = 100,
-  check = any
+  check = function(...) any(..., na.rm = TRUE)
 )
 }
 \arguments{
