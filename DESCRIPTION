@@ -1,10 +1,13 @@
 Package: op
-Title: What the Package Does (One Line, Title Case)
+Title: Option Volatility and Pricing Models
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Wilson", "Freitas", , "wilson.freitas@gmail.com",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0368-9267"))
+Description: Many different option volatility models and option pricing models
+             for Stocks, Interest Rates, and Currency European options in the
+             Black-Scholes world.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -14,3 +17,5 @@ Suggests:
 Config/testthat/edition: 3
 URL: https://github.com/wilsonfreitas/op
 BugReports: https://github.com/wilsonfreitas/op/issues
+Imports: 
+    stats
