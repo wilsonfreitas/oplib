@@ -35,13 +35,11 @@
 multiroot <- function(func_, interval, ...,
                       tolerance = .Machine$double.eps,
                       maxiter = 100,
-                      check = any) {
+                      check = function(...) any(..., na.rm = TRUE)) {
   s_lower <- sign(func_(interval[1], ...))
   s_upper <- sign(func_(interval[2], ...))
+  ix <- s_upper * s_lower != -1
 
-  if (any(s_upper * s_lower != -1)) {
-    stop("function evaluated at upper and lower limits must have the opposite sign")
-  }
   func <- function(a, ...) func_(a, ...) * s_upper
   initial_guess <- sum(interval) / 2
   x <- initial_guess * rep(1, length(s_upper))
@@ -50,6 +48,7 @@ multiroot <- function(func_, interval, ...,
 
   iter <- 0
   err <- func(x, ...)
+  err[ix] <- NA
   while (check(abs(err) > tolerance) && iter < maxiter) {
     idx.err <- err < 0
     idx.err <- ifelse(is.na(idx.err), FALSE, idx.err)
@@ -59,6 +58,8 @@ multiroot <- function(func_, interval, ...,
     upper[idx.err] <- x[idx.err]
     x[idx.err] <- (lower[idx.err] + x[idx.err]) / 2
     err <- func(x, ...)
+    err[ix] <- NA
+    x[ix] <- NA
     iter <- iter + 1
   }
   res <- list(root = x, iter = iter, err = err)
