@@ -59,5 +59,5 @@ op_vol |>
   theme(legend.position = "bottom") +
   labs(
     x = "Delta", y = "Implied Volatility",
-    title = str_glue("Stock Options Volatility - {symbol_} {format(refdate)}")
+    title = str_glue("Equity Options Volatility - {symbol_} {format(refdate)}")
   )
