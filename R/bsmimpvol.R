@@ -20,7 +20,8 @@
 #' and once those vectors differs in length the recycle rule is applied.
 #'
 #' @return
-#' An approximation for the implied volatility. If the algorithm converges before
+#' An approximation for the implied volatility.
+#' If the algorithm converges before
 #' \code{maxiter} is reached, Black-Scholes-Merton formula calculated with this
 #' volatility should not differ from \code{option_prices} by more than
 #' \code{tolerance}.
