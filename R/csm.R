@@ -255,3 +255,37 @@ csmvega <- function(type, spot, strike, time, rate, yield, sigma, mu3, mu4) {
   )
   return((csmu - csmd) / (2 * dsig))
 }
+
+#' Computes Delta from modified Corrado-Su model.
+#'
+#' This function computes delta greek for an option with the modified Corrado-Su
+#' pricing model.
+#'
+#' @param type 'call' for call option, any other value for put.
+#' @param spot current stock price.
+#' @param strike the strike price.
+#' @param time time to option expiration in years.
+#' @param rate the risk-free interest rate.
+#' @param yield the dividends that are expected to be paid.
+#' @param sigma volatility of the stock price.
+#' @param mu3 skewness.
+#' @param mu4 kurtosis.
+#'
+#' @return
+#' Vector with options Delta.
+#'
+#' @examples
+#' csmdelta("call", 14, 13, 0.1, 0.15, 0, 0.5, 0.18, 3.53)
+#' csmdelta("put", 14, 13, 0.1, 0.15, 0, 0.5, 0.18, 2.53)
+#'
+#' @export
+csmdelta <- function(type, spot, strike, time, rate, yield, sigma, mu3, mu4) {
+  dsig <- 0.001
+  csmu <- csmprice(
+    type, spot + dsig, strike, time, rate, yield, sigma, mu3, mu4
+  )
+  csmd <- csmprice(
+    type, spot - dsig, strike, time, rate, yield, sigma, mu3, mu4
+  )
+  return((csmu - csmd) / (2 * dsig))
+}
