@@ -15,20 +15,6 @@ RHO <- 0.3
 #' @export
 BETA <- 0
 
-# Default SVI initial parameters
-#' @export
-SVI.A <- 1e-12
-#' @export
-SVI.B <- 1e-8
-#' @export
-SVI.SIGMA <- 1e-8
-#' @export
-SVI.RHO <- -0.8
-#' @export
-SVI.M <- 1e-8
-#' @export
-SVI.ERR <- 0.02
-
 # Default corrado-su initial parameters
 #' @export
 CS.SKEW <- 1e-8
