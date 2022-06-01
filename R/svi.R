@@ -3,13 +3,13 @@
 #' Calculates the variance as given by the SVI model for
 #' the provided parameters.
 #'
-#' @param a 'a' in the SVI model (~~ instantaneous variance)
-#' @param b 'b' in the SVI model (~~ speed of variance mean reversion)
-#' @param m 'm' in the SVI model (~~ long term expected variance)
-#' @param rho 'rho' in the SVI model (~~ correlation of variance and price)
+#' @param a 'a' in the SVI model (instantaneous variance)
+#' @param b 'b' in the SVI model (speed of variance mean reversion)
+#' @param m 'm' in the SVI model (long term expected variance)
+#' @param rho 'rho' in the SVI model (correlation between variance and price)
 #' @param x 'x' in the SVI model, given by ln(K/F) where K is an options strike
 #'        price and F its underlying's future
-#' @param sigma 'sigma' in the SVI model (~~ volatility of variance)
+#' @param sigma 'sigma' in the SVI model (volatility of variance)
 #'
 #' @section Recycle rule:
 #'
@@ -63,7 +63,7 @@ svi_fit <- function(variance,
                     rate,
                     yield = 0,
                     initial_guess = NULL) {
-  future <- spot * exp(rate * time)
+  future <- spot * exp((rate - yield) * time)
 
   x <- log(strike / future)
   tol <- length(variance) * min(variance)^2
@@ -97,8 +97,8 @@ svi_fit <- function(variance,
       opts = list(
         algorithm = "NLOPT_GN_ISRES",
         print_level = 0,
-        xtol_rel = 1e-4,
-        maxeval = 2000
+        xtol_rel = 1e-6,
+        maxeval = 4000
       )
     )
 
@@ -114,8 +114,8 @@ svi_fit <- function(variance,
     opts = list(
       algorithm = "NLOPT_LN_COBYLA",
       print_level = 0,
-      xtol_rel = 1e-4,
-      maxeval = 2000
+      xtol_rel = 1e-6,
+      maxeval = 4000
     )
   )
 
