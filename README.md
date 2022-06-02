@@ -95,34 +95,3 @@ op_vol |>
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
-
-``` r
-options(languageserver.formatting_style = function(options) {
-  styler::tidyverse_style(
-    scope = I(c("indention", "line_breaks", "tokens")),
-    indent_by = options$tabSize
-  )
-})
-
-options(RStudio = TRUE)
-
-options(repos = structure(c(CRAN = "https://cran.rstudio.com/")))
-
-options(radian.auto_indentation = FALSE)
-
-options(radian.insert_new_line = FALSE)
-
-options(radian.auto_match = FALSE)
-
-options(radian.color_scheme = "monokai")
-```
-
-``` r
-linters: with_defaults(
-  line_length_linter(80), 
-  commented_code_linter = NULL,
-  object_name_linter = NULL,
-  object_usage_linter = NULL,
-  object_length_linter = NULL
-  )
-```
