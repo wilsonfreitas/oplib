@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# op
+# oplib
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -10,11 +10,11 @@ Option Volatility and Pricing Models.
 
 ## Installation
 
-You can install the development version of op like so:
+You can install the development version of oplib like so:
 
 ``` r
 if (!require(devtools)) install.packages("devtools")
-devtools::install_github("wilsonfreitas/op")
+devtools::install_github("wilsonfreitas/oplib")
 ```
 
 ## Examples
@@ -24,7 +24,7 @@ devtools::install_github("wilsonfreitas/op")
 Pricing options with Black-Scholes-Merton Model (BSM Model).
 
 ``` r
-library(op)
+library(oplib)
 
 bsmprice(c("call", "put"), c(50, 49, 48, 47), 45, 0.25, 0.13, 0.01, 0.2)
 #> [1] 6.5031266 0.2854164 4.7405597 0.6079959

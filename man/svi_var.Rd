@@ -7,18 +7,18 @@
 svi_var(a, b, m, rho, x, sigma)
 }
 \arguments{
-\item{a}{'a' in the SVI model (~~ instantaneous variance)}
+\item{a}{'a' in the SVI model (instantaneous variance)}
 
-\item{b}{'b' in the SVI model (~~ speed of variance mean reversion)}
+\item{b}{'b' in the SVI model (speed of variance mean reversion)}
 
-\item{m}{'m' in the SVI model (~~ long term expected variance)}
+\item{m}{'m' in the SVI model (long term expected variance)}
 
-\item{rho}{'rho' in the SVI model (~~ correlation of variance and price)}
+\item{rho}{'rho' in the SVI model (correlation between variance and price)}
 
 \item{x}{'x' in the SVI model, given by ln(K/F) where K is an options strike
 price and F its underlying's future}
 
-\item{sigma}{'sigma' in the SVI model (~~ volatility of variance)}
+\item{sigma}{'sigma' in the SVI model (volatility of variance)}
 }
 \value{
 Volatility value as given by the SVI model

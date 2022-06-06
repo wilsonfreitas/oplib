@@ -1,4 +1,4 @@
-Package: op
+Package: oplib
 Title: Option Volatility and Pricing Models
 Version: 0.0.0.9000
 Authors@R: 
@@ -15,8 +15,8 @@ RoxygenNote: 7.1.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://github.com/wilsonfreitas/op
-BugReports: https://github.com/wilsonfreitas/op/issues
+URL: https://github.com/wilsonfreitas/oplib
+BugReports: https://github.com/wilsonfreitas/oplib/issues
 Imports: 
     nloptr,
     stats
