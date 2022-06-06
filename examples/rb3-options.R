@@ -8,18 +8,21 @@ ch <- cotahist_get(refdate, "daily")
 yc <- yc_get(refdate)
 op <- cotahist_equity_options_superset(ch, yc)
 
-symbol_ <- "B3SA3"
-op1 <- op |>
-  filter(
-    symbol.underlying == symbol_
-  )
+mats <- unique(op$maturity_date) |> sort()
 
-op1 |>
+symbol_ <- "ABEV3"
+op |>
+  filter(
+    symbol.underlying == symbol_,
+    maturity_date %in% mats[1:2]
+  ) |>
   mutate(
     cost = close / close.underlying,
     moneyness = (close.underlying * (1 + r_252)
     ^ (bizdays(refdate, maturity_date, "Brazil/ANBIMA") / 252)) / strike
   ) |>
-  select(symbol, type, moneyness, cost) |>
+  select(symbol, maturity_date, type, moneyness, cost) |>
   arrange(type, moneyness) |>
-  View()
+  ggplot(aes(x = moneyness, y = cost)) +
+  geom_point() +
+  facet_wrap(maturity_date ~ type)
