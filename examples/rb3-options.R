@@ -1,4 +1,5 @@
 library(rb3)
+library(fixedincome)
 library(bizdays)
 library(tidyverse)
 devtools::load_all()
@@ -18,8 +19,10 @@ op |>
   ) |>
   mutate(
     cost = close / close.underlying,
-    moneyness = (close.underlying * (1 + r_252)
-    ^ (bizdays(refdate, maturity_date, "Brazil/ANBIMA") / 252)) / strike
+    rate = spotrate(r_252, "discrete", "business/252", "Brazil/ANBIMA"),
+    biz_days = bizdays(refdate, maturity_date, "Brazil/ANBIMA"),
+    future = close.underlying * compound(rate, term(biz_days, "days")),
+    moneyness = future / strike
   ) |>
   select(symbol, maturity_date, type, moneyness, cost) |>
   arrange(type, moneyness) |>
