@@ -246,7 +246,7 @@ csmprice <- function(type, spot, strike, time, rate, yield, sigma, mu3, mu4) {
 #'
 #' @export
 csmvega <- function(type, spot, strike, time, rate, yield, sigma, mu3, mu4) {
-  dsig <- 0.001
+  dsig <- 0.0001
   csmu <- csmprice(
     type, spot, strike, time, rate, yield, sigma + dsig, mu3, mu4
   )
