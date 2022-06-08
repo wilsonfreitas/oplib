@@ -34,9 +34,13 @@ create_uncons_regionD <- function() {
   function(mu3p, mu4p) {
     mu4 <- ff(mu4p, 3, 7)
     mu3_l <- rd_curve(mu4)
-    mu3_u <- -mu3_l
-    mu3 <- ff(mu3p, mu3_l, mu3_u)
-    c(mu3, mu4)
+    if (is.na(mu3_l)) {
+      c(0, mu4)
+    } else {
+      mu3_u <- -mu3_l
+      mu3 <- ff(mu3p, mu3_l, mu3_u)
+      c(mu3, mu4)
+    }
   }
 }
 
@@ -49,7 +53,7 @@ ch <- cotahist_get(refdate, "daily")
 yc <- yc_get(refdate)
 op <- cotahist_equity_options_superset(ch, yc)
 
-symbol_ <- "B3SA3"
+symbol_ <- "ABEV3"
 op1 <- op |>
   filter(
     symbol.underlying == symbol_
@@ -82,40 +86,62 @@ op_vol <- op1 |>
 
 # ----
 
+grad <- function(par, type, spot, strike, rate, time, y.data, sy.data) {
+  par_ <- uncons_regionD(par[2], par[3])
+  par <- c(par[1], par_[1], par_[2])
+
+  #numeric vega for Corrado-Su mod
+  dcs.dsig <- csmvega(
+    type, spot, strike, time, rate, 0,
+    par[1], par[2], par[3]
+  )
+
+  #other derivatives for the gradient
+  csmw_ <- csmw(par[1], time, par[2], par[3])
+  dmod <- csmd(spot, strike, time, rate, 0, par[1], csmw_)
+  q3 <- csmq3(spot, par[1], time, dmod, csmw_)
+  q4 <- csmq4(spot, par[1], time, dmod, csmw_)
+
+  premium <- csmprice(type, spot, strike, time, rate, 0, par[1], par[2], par[3])
+  grad1 <- sum(2 * dcs.dsig * (premium -  y.data) / (sy.data ^ 2))
+  grad2 <- sum(2 * q3 * (premium -  y.data) / (sy.data ^ 2))
+  grad3 <- sum(2 * q4 * (premium -  y.data) / (sy.data ^ 2))
+
+  ret <- c(grad1, grad2, grad3)
+  ret
+}
+
 f.optim.csm <- function(par, type, spot, strike, rate, time, y.data, sy.data) {
   sigma <- par[1]
   params <- uncons_regionD(par[2], par[3])
-  params <- c(par[2], par[3])
   yf <- csmprice(type, spot, strike, time, rate, 0, sigma, params[1], params[2])
-  return(sum(((yf - y.data) / sy.data)^2))
+  ret <- sum(((yf - y.data) / sy.data)^2)
+  ret
 }
 
 # ----
-
-comb <- expand.grid(
-  mu3 = seq(-1.2, 1.2, length.out = 10),
-  mu4 = seq(3, 7, length.out = 10)
-)
-
-res <- with(op_vol, {
+typo <- "Call"
+res <- with(op_vol |> filter(type == typo), {
   optim(
-    par = c(0.5, 0, 3), fn = f.optim.csm, gr = NULL,
-    type, close.underlying, strike, rate, time_to_maturity, close, 1
+    par = c(0.4, 0, 4), fn = f.optim.csm, gr = grad,
+    type, close.underlying, strike, rate, time_to_maturity, close, 1 / volume,
+    lower = c(1e-3, -Inf, -Inf), upper = Inf, method = "L-BFGS-B"
   )
 })
 
+params <- uncons_regionD(res$par[2], res$par[3])
+
 op_vol_f <- op_vol |>
+  filter(type == typo) |>
   mutate(
     theo_price = csmprice(
       type, close.underlying, strike, time_to_maturity, rate, 0,
-      res$par[1], res$par[2], res$par[3]
+      res$par[1], params[1], params[2]
     ),
     csm_impvol = bsmimpvol(
       theo_price, type, close.underlying, strike, time_to_maturity, rate, 0
     )
   )
-
-View(op_vol_f)
 
 op_vol_f |>
   ggplot(aes(x = strike, y = bsm_impvol, colour = type)) +
@@ -123,3 +149,8 @@ op_vol_f |>
   geom_line(aes(y = csm_impvol), colour = "black") +
   geom_vline(xintercept = close_underlying, alpha = 0.5, size = 1) +
   theme(legend.position = "none")
+
+op_vol_f |>
+  mutate(error = close - theo_price) |>
+  ggplot(aes(x = strike, y = error, size = volume)) +
+  geom_point(alpha = 0.5)
