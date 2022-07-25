@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# oplib
+# oplib <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -42,7 +42,24 @@ volatility.
 ``` r
 library(rb3)
 library(bizdays)
+#> 
+#> Attaching package: 'bizdays'
+#> The following object is masked from 'package:stats':
+#> 
+#>     offset
 library(tidyverse)
+#> -- Attaching packages ---------------------------------------------------------------------------------------------------------------------------------------------- tidyverse 1.3.1 --
+#> v ggplot2 3.3.6     v purrr   0.3.4
+#> v tibble  3.1.7     v dplyr   1.0.9
+#> v tidyr   1.2.0     v stringr 1.4.0
+#> v readr   2.1.2     v forcats 0.5.1
+#> -- Conflicts ------------------------------------------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+#> x readr::edition_get()   masks testthat::edition_get()
+#> x dplyr::filter()        masks stats::filter()
+#> x purrr::is_null()       masks testthat::is_null()
+#> x dplyr::lag()           masks stats::lag()
+#> x readr::local_edition() masks testthat::local_edition()
+#> x dplyr::matches()       masks tidyr::matches(), testthat::matches()
 
 refdate <- preceding(Sys.Date() - 3, "Brazil/B3")
 ch <- cotahist_get(refdate, "daily")
