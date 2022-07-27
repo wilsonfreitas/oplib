@@ -48,7 +48,7 @@ uncons_regionD <- create_uncons_regionD()
 
 # ----
 
-refdate <- preceding(Sys.Date() - 1, "Brazil/B3")
+refdate <- getdate("last bizday", Sys.Date(), "Brazil/B3")
 ch <- cotahist_get(refdate, "daily")
 yc <- yc_get(refdate)
 op <- cotahist_equity_options_superset(ch, yc)
@@ -76,12 +76,15 @@ op_vol <- op1 |>
     delta = bsmdelta(
       type, close.underlying, strike, time_to_maturity, rate, 0, bsm_impvol
     ),
+    vega = bsmvega(
+      type, close.underlying, strike, time_to_maturity, rate, 0, bsm_impvol
+    ),
     adj_delta = ifelse(str_to_lower(type) == "call", delta, 1 + delta)
   ) |>
   select(
     symbol, volume,
     type, close.underlying, strike, time_to_maturity, rate,
-    biz_days, close, high, low, bsm_impvol, delta, adj_delta
+    biz_days, close, high, low, bsm_impvol, vega, delta, adj_delta
   )
 
 # ----
@@ -136,23 +139,24 @@ grad2_obj_csm <- function(par,
   c(grad1, grad2, grad3)
 }
 
-f_obj_csm <- function(par, type, spot, strike, rate, time, y.data, sy.data) {
+f_obj_csm <- function(par, type, spot, strike, rate, time, y.data, w.data) {
   sigma <- par[1]
   params <- uncons_regionD(par[2], par[3])
   par_ <- c(par[1], params)
   yf <- csmprice(type, spot, strike, time, rate, 0, par_[1], par_[2], par_[3])
-  ret <- sum(((yf - y.data) / sy.data)^2)
+  ret <- sum(((yf - y.data) * w.data)^2)
   ret
 }
 
 # ----
 
-typo <- c("Call", "Put")
+typo <- c("Call")
 res <- with(op_vol |> filter(type %in% typo, !is.na(adj_delta)), {
   optim(
     par = c(0.1, 0, 3), fn = f_obj_csm, gr = grad2_obj_csm,
     method = "L-BFGS-B",
-    type, close.underlying, strike, rate, time_to_maturity, close, 1
+    type, close.underlying, strike, rate, time_to_maturity, close, vega,
+    control = list(trace = 3)
   )
 })
 

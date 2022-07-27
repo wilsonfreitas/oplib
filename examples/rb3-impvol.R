@@ -3,7 +3,7 @@ library(rb3)
 library(bizdays)
 library(tidyverse)
 
-refdate <- Sys.Date() - 3
+refdate <- getdate("last bizday", Sys.Date(), "Brazil/B3")
 ch <- cotahist_get(refdate, "daily")
 yc <- yc_get(refdate)
 

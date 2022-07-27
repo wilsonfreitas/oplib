@@ -4,7 +4,7 @@ library(bizdays)
 library(tidyverse)
 devtools::load_all()
 
-refdate <- preceding(Sys.Date() - 1, "Brazil/B3")
+refdate <- getdate("last bizday", Sys.Date(), "Brazil/B3")
 ch <- cotahist_get(refdate, "daily")
 yc <- yc_get(refdate)
 op <- cotahist_equity_options_superset(ch, yc)

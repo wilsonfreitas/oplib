@@ -122,57 +122,6 @@ op_csm |>
   ggplot(aes(x = strike, y = error)) +
   geom_point()
 
-# min vol error ----
-
-f_obj_csm_min_vol <- function(par,
-                              type, spot, strike, rate, time,
-                              y.data, sy.data) {
-  print(par)
-  sigma <- par[1]
-  mu3 <- par[2]
-  mu4 <- par[3]
-  pf <- csmprice(type, spot, strike, time, rate, 0, sigma, mu3, mu4)
-  yf <- bsmimpvol(pf, type, spot, strike, time, rate, 0)
-  sum(((yf - y.data) / sy.data)^2, na.rm = TRUE)
-}
-
-res <- with(op_vol, {
-  optim(
-    par = c(0.3, 1, 4), fn = f_obj_csm_min_vol, gr = NULL,
-    type, close.underlying, strike, rate, time_to_maturity, bsm_impvol, 1,
-    lower = c(1e-2, -Inf, 3), upper = Inf, method = "L-BFGS-B",
-    control = list(trace = 3)
-  )
-})
-
-op_csm <- op_vol |>
-  mutate(
-    theo_price = csmprice(
-      type, close.underlying, strike, time_to_maturity, rate, 0,
-      res$par[1], res$par[2], res$par[3]
-    ),
-    csm_impvol = bsmimpvol(
-      theo_price, type, close.underlying, strike, time_to_maturity, rate, 0
-    )
-  )
-
-op_csm |>
-  ggplot(aes(x = strike, y = bsm_impvol, colour = type)) +
-  geom_point(alpha = 0.5) +
-  geom_line(aes(y = csm_impvol), colour = "black") +
-  geom_vline(xintercept = close_underlying, alpha = 0.5, size = 1) +
-  theme(legend.position = "none")
-
-op_csm |>
-  mutate(error = close - theo_price) |>
-  ggplot(aes(x = strike, y = error)) +
-  geom_point()
-
-op_csm |>
-  mutate(error = bsm_impvol - csm_impvol) |>
-  ggplot(aes(x = strike, y = error)) +
-  geom_point()
-
 # high-low weights ----
 
 res <- with(op_vol, {
