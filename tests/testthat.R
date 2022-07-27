@@ -1,4 +1,4 @@
 library(testthat)
-library(op)
+library(oplib)
 
-test_check("op")
+test_check("oplib")

@@ -49,6 +49,7 @@ multiroot <- function(func_, interval, ...,
   iter <- 0
   err <- func(x, ...)
   err[ix] <- NA
+  stopifnot(!all(is.na(err)))
   while (check(abs(err) > tolerance) && iter < maxiter) {
     idx.err <- err < 0
     idx.err <- ifelse(is.na(idx.err), FALSE, idx.err)
@@ -61,6 +62,7 @@ multiroot <- function(func_, interval, ...,
     err[ix] <- NA
     x[ix] <- NA
     iter <- iter + 1
+    stopifnot(!all(is.na(err)))
   }
   res <- list(root = x, iter = iter, err = err)
 

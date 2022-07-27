@@ -6,6 +6,8 @@
 \alias{oplib-package}
 \title{oplib: Option Volatility and Pricing Models}
 \description{
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+
 Many different option volatility models and option pricing models for Stocks, Interest Rates, and Currency European options in the Black-Scholes world.
 }
 \seealso{

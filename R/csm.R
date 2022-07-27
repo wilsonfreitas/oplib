@@ -289,3 +289,124 @@ csmdelta <- function(type, spot, strike, time, rate, yield, sigma, mu3, mu4) {
   )
   return((csmu - csmd) / (2 * dsig))
 }
+
+#' Unconstrained Gram-Charlier Distribution Parametrization
+#'
+#' Creates the unconstrained parametrization for Gram-Charlier Distribution.
+#'
+#' @param x a numeric value
+#' @param mu3p a numeric value
+#' @param mu4p a numeric value
+#'
+#' @name uncons-gram-charlier
+#' @importFrom stats approxfun
+NULL
+
+#' @rdname uncons-gram-charlier
+#' @export
+d_poly <- function(x) {
+  2 * (x^3 - 3 * x)^2 - 1 * (x^2 - 1) * (x^4 - 6 * x^2 + 3)
+}
+
+#' @rdname uncons-gram-charlier
+#' @export
+mu3 <- function(x) {
+  -12 * (x^3 - 3 * x) / d_poly(x)
+}
+
+#' @rdname uncons-gram-charlier
+#' @export
+mu4 <- function(x) {
+  24 * (x^2 - 1) / d_poly(x) + 3
+}
+
+#' @rdname uncons-gram-charlier
+#' @export
+create_uncons_regionD <- function() {
+  # calculate limits
+  a <- -3
+  start <- sqrt(3)
+  end <- 100
+  x <- seq(start^a, end^a, length.out = 100)
+  x <- x ^ (1 / a)
+  # calculate region D
+  dm <- cbind(x = x, mu3 = mu3(x), mu4 = mu4(x))
+  rd <- dm[order(dm[, "mu4"]), ]
+  rd_curve <- approxfun(rd[, "mu4"], rd[, "mu3"])
+  ff <- function(x, a, b) a + (b - a) / (1 + exp(-x))
+  function(mu3p, mu4p) {
+    mu4 <- ff(mu4p, 3, 7)
+    mu3_l <- rd_curve(mu4)
+    if (is.na(mu3_l)) {
+      c(0, mu4)
+    } else {
+      mu3_u <- -mu3_l
+      mu3 <- ff(mu3p, mu3_l, mu3_u)
+      c(mu3, mu4)
+    }
+  }
+}
+
+#' @rdname uncons-gram-charlier
+#' @export
+uncons_regionD <- create_uncons_regionD()
+
+#' Corrado-Su Model Objective Function in Implied Volatility
+#'
+#' Objective function to Corrado-Su modelo that minimizes the error in implied
+#' volatility.
+#'
+#' @param par a numeric value
+#' @param type option type: `Call` or `Put`
+#' @param spot a numeric value
+#' @param strike a numeric value
+#' @param rate a numeric value
+#' @param yield a numeric value
+#' @param time a numeric value
+#' @param vol a numeric value
+#' @param weights a numeric value
+#'
+#' @export
+csm_obj_min_vol <- function(par,
+                            type, spot, strike, rate, yield, time,
+                            vol, weights = 1) {
+  sigma <- par[1]
+  params <- uncons_regionD(par[2], par[3])
+  mu3 <- params[1]
+  mu4 <- params[2]
+  pf <- csmprice(type, spot, strike, time, rate, yield, sigma, mu3, mu4)
+  yf <- bsmimpvol(pf, type, spot, strike, time, rate, yield)
+  sum(((yf - vol) * weights)^2, na.rm = TRUE)
+}
+
+#' Corrado-Su Model Fit in Implied Volatility
+#'
+#' Function to fit Corrado-Su modelo that minimizes the error in implied
+#' volatility.
+#'
+#' @param par a numeric value
+#' @param type option type: `Call` or `Put`
+#' @param spot a numeric value
+#' @param strike a numeric value
+#' @param rate a numeric value
+#' @param yield a numeric value
+#' @param time a numeric value
+#' @param vol a numeric value
+#' @param weights a numeric value
+#' @param ... additional arguments passed to `optim`
+#'
+#' @importFrom stats optim
+#' @export
+csm_fit_min_vol <- function(par,
+                            type, spot, strike, rate, yield, time,
+                            vol, weights = 1, ...) {
+  res <- optim(
+    par,
+    fn = csm_obj_min_vol, gr = NULL,
+    type, spot, strike, rate, yield, time, vol, weights,
+    lower = c(1e-1, -Inf, -Inf), upper = Inf,
+    method = "L-BFGS-B", ...
+  )
+
+  c(res$par[1], uncons_regionD(res$par[2], res$par[3]))
+}
