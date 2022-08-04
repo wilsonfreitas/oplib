@@ -1,50 +1,7 @@
 library(rb3)
 library(bizdays)
 library(tidyverse)
-devtools::load_all()
-
-d_poly <- function(x) {
-  2 * (x^3 - 3 * x)^2 - 1 * (x^2 - 1) * (x^4 - 6 * x^2 + 3)
-}
-
-mu3 <- function(x) {
-  -12 * (x^3 - 3 * x) / d_poly(x)
-}
-
-mu4 <- function(x) {
-  24 * (x^2 - 1) / d_poly(x) + 3
-}
-
-regionD <- function(x) {
-  dm <- cbind(x = x, mu3 = mu3(x), mu4 = mu4(x))
-  idx <- order(dm[, "mu4"])
-  dm[idx, ]
-}
-
-adj_seq <- function(start, end, a = -3, length.out = 100) {
-  x <- seq(start^a, end^a, length.out = length.out)
-  x ^ (1 / a)
-}
-
-create_uncons_regionD <- function() {
-  x <- adj_seq(sqrt(3), 100)
-  rd <- regionD(x)
-  rd_curve <- approxfun(rd[, "mu4"], rd[, "mu3"])
-  ff <- function(x, a, b) a + (b - a) / (1 + exp(-x))
-  function(mu3p, mu4p) {
-    mu4 <- ff(mu4p, 3, 7)
-    mu3_l <- rd_curve(mu4)
-    if (is.na(mu3_l)) {
-      c(0, mu4)
-    } else {
-      mu3_u <- -mu3_l
-      mu3 <- ff(mu3p, mu3_l, mu3_u)
-      c(mu3, mu4)
-    }
-  }
-}
-
-uncons_regionD <- create_uncons_regionD()
+library(oplib)
 
 # ----
 
@@ -53,7 +10,7 @@ ch <- cotahist_get(refdate, "daily")
 yc <- yc_get(refdate)
 op <- cotahist_equity_options_superset(ch, yc)
 
-symbol_ <- "VALE3"
+symbol_ <- "ABEV3"
 op1 <- op |>
   filter(
     symbol.underlying == symbol_
@@ -63,7 +20,7 @@ maturities <- unique(op1$maturity_date) |> sort()
 close_underlying <- op1$close.underlying[1]
 
 op_vol <- op1 |>
-  filter(maturity_date %in% maturities[2]) |>
+  filter(maturity_date %in% maturities[1]) |>
   mutate(
     biz_days = bizdays(
       refdate, following(maturity_date, "Brazil/B3"), "Brazil/B3"
@@ -150,24 +107,32 @@ f_obj_csm <- function(par, type, spot, strike, rate, time, y.data, w.data) {
 
 # ----
 
-typo <- c("Call")
-res <- with(op_vol |> filter(type %in% typo, !is.na(adj_delta)), {
-  optim(
-    par = c(0.1, 0, 3), fn = f_obj_csm, gr = grad2_obj_csm,
-    method = "L-BFGS-B",
-    type, close.underlying, strike, rate, time_to_maturity, close, vega,
+typo <- c("Put")
+# res1 <- with(op_vol |> filter(type %in% typo, !is.na(adj_delta)), {
+#   optim(
+#     par = c(0.1, 0, 3), fn = f_obj_csm, gr = grad_obj_csm,
+#     method = "L-BFGS-B",
+#     type, close.underlying, strike, rate, time_to_maturity, close, vega,
+#     control = list(trace = 3)
+#   )
+# })
+
+# params <- uncons_regionD(res$par[2], res$par[3])
+
+params <- with(op_vol |> filter(type %in% typo, !is.na(adj_delta)), {
+  csm_fit_min_price(
+    par = c(0.1, 0, 3),
+    type, close.underlying, strike, rate, 0, time_to_maturity, close, vega,
     control = list(trace = 3)
   )
 })
-
-params <- uncons_regionD(res$par[2], res$par[3])
 
 op_vol_f <- op_vol |>
   filter(type %in% typo) |>
   mutate(
     theo_price = csmprice(
       type, close.underlying, strike, time_to_maturity, rate, 0,
-      res$par[1], params[1], params[2]
+      params[1], params[2], params[3]
     ),
     csm_impvol = bsmimpvol(
       theo_price, type, close.underlying, strike, time_to_maturity, rate, 0
