@@ -53,36 +53,69 @@ typo <- c("Call")
 op_vol <- op_vol |>
   filter(type %in% typo, !is.na(delta))
 
-csm_fit_min_vol_ <- function(par,
-                             type, spot, strike, rate, yield, time,
-                             vol, weights = 1, ...) {
-  res <- DEoptim(
-    par,
-    fn = csm_obj_min_vol,
-    type, spot, strike, rate, yield, time, vol, weights,
-    lower = c(1e-3, -10, -10), upper = c(10, 10, 10), ...
-  )
-
-  c(res$par[1], uncons_regionD(res$par[2], res$par[3]))
-}
-
-res <- with(op_vol, {
-  fn <- function(par) {
-    csm_obj_min_vol(
-      par, type, close.underlying, strike, rate, 0,
-      time_to_maturity, bsm_impvol, 1
-    )
-  }
-  DEoptim(
-    fn = fn, lower = c(1e-1, -40, -10), upper = c(1, 40, 10),
-    control = DEoptim.control(itermax = 100)
+# BBAS3 1 vencimento 2022-07-27, fica melhor com weights = vega, no ATM, OTM zoa
+params <- with(op_vol, {
+  csm_fit_min_vol(
+    par = c(0.5, 0, 0), type, close.underlying, strike, rate, 0,
+    time_to_maturity, bsm_impvol, vega
   )
 })
 
-params <- c(
-  res$optim$bestmem[1],
-  uncons_regionD(res$optim$bestmem[2], res$optim$bestmem[3])
-) |> unname()
+op_vol_f <- op_vol |>
+  mutate(
+    theo_price = csmprice(
+      type, close.underlying, strike, time_to_maturity, rate, 0,
+      params[1], params[2], params[3]
+    ),
+    csm_impvol = bsmimpvol(
+      theo_price, type, close.underlying, strike, time_to_maturity, rate, 0
+    )
+  )
+
+op_vol_f |>
+  mutate(error = (bsm_impvol - csm_impvol)) |>
+  summarise(se = sum(error ^2))
+
+op_vol_f |>
+  mutate(error = (bsm_impvol - csm_impvol) / bsm_impvol) |>
+  ggplot(aes(x = adj_delta, y = error, colour = type)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(. ~ type)
+
+op_vol_f |>
+  ggplot(aes(x = strike, y = bsm_impvol, colour = type)) +
+  geom_point(alpha = 0.5) +
+  geom_point(aes(y = csm_impvol), colour = "black") +
+  geom_vline(xintercept = close_underlying, alpha = 0.5, size = 1) +
+  theme(legend.position = "none")
+
+# deoptim ----
+
+csm_fit_deoptim_min_vol <- function(par,
+                                    type, spot, strike, rate, yield, time,
+                                    vol, weights = 1, ...) {
+  fn <- function(par) {
+    csm_obj_min_vol(
+      par, type, spot, strike, rate, yield, time, bsm_impvol, weights
+    )
+  }
+  DEoptim(
+    fn = fn, lower = c(1e-1, -40, -10), upper = c(1, 40, 10), ...
+  )
+
+  c(
+    res$optim$bestmem[1],
+    uncons_regionD(res$optim$bestmem[2], res$optim$bestmem[3])
+  ) |> unname()
+}
+
+params <- with(op_vol, {
+  csm_fit_deoptim_min_vol(
+    par, type, close.underlying, strike, rate, 0,
+    time_to_maturity, bsm_impvol, 1,
+    control = DEoptim.control(itermax = 100)
+  )
+})
 
 op_vol_f <- op_vol |>
   mutate(

@@ -2,6 +2,7 @@
 library(rb3)
 library(bizdays)
 library(tidyverse)
+library(oplib)
 
 refdate <- getdate("last bizday", Sys.Date(), "Brazil/B3")
 ch <- cotahist_get(refdate, "daily")
@@ -9,19 +10,18 @@ yc <- yc_get(refdate)
 
 op <- cotahist_equity_options_superset(ch, yc)
 
-op$symbol.underlying |> unique()
-
-symbol_ <- "B3SA3"
+symbol_ <- "AMAR3"
 op1 <- op |>
   filter(
-    symbol.underlying == symbol_
+    symbol.underlying == symbol_,
+    type == "Call"
   )
 
 maturities <- unique(op1$maturity_date) |> sort()
 close_underlying <- op1$close.underlying[1]
 
 op_vol <- op1 |>
-  filter(maturity_date %in% maturities[1:2]) |>
+  filter(maturity_date %in% maturities) |>
   mutate(
     biz_days = bizdays(
       refdate, following(maturity_date, "Brazil/ANBIMA"), "Brazil/ANBIMA"
