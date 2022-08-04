@@ -379,6 +379,59 @@ csm_obj_min_vol <- function(par,
   sum(((yf - vol) * weights)^2, na.rm = TRUE)
 }
 
+#' Corrado-Su Model Objective Function in Price
+#'
+#' Objective function to Corrado-Su modelo that minimizes the error in price.
+#'
+#' @param par a numeric value
+#' @param type option type: `Call` or `Put`
+#' @param spot a numeric value
+#' @param strike a numeric value
+#' @param rate a numeric value
+#' @param yield a numeric value
+#' @param time a numeric value
+#' @param price a numeric value
+#' @param weights a numeric value
+#'
+#' @export
+csm_obj_min_price <- function(par,
+                              type, spot, strike, rate, yield, time,
+                              price, weights = 1) {
+  sigma <- par[1]
+  params <- uncons_regionD(par[2], par[3])
+  mu3 <- params[1]
+  mu4 <- params[2]
+  yf <- csmprice(type, spot, strike, time, rate, yield, sigma, mu3, mu4)
+  sum(((yf - price) * weights)^2, na.rm = TRUE)
+}
+
+#' @rdname csm_obj_min_price
+#' @export
+csm_obj_grad_price <- function(par, type, spot, strike, rate, time, price, weights) {
+  par_ <- uncons_regionD(par[2], par[3])
+  par <- c(par[1], par_[1], par_[2])
+
+  #numeric vega for Corrado-Su mod
+  dcs.dsig <- csmvega(
+    type, spot, strike, time, rate, 0,
+    par[1], par[2], par[3]
+  )
+
+  #other derivatives for the gradient
+  csmw_ <- csmw(par[1], time, par[2], par[3])
+  dmod <- csmd(spot, strike, time, rate, 0, par[1], csmw_)
+  q3 <- csmq3(spot, par[1], time, dmod, csmw_)
+  q4 <- csmq4(spot, par[1], time, dmod, csmw_)
+
+  premium <- csmprice(type, spot, strike, time, rate, 0, par[1], par[2], par[3])
+  grad1 <- sum(2 * dcs.dsig * (premium -  price) / (weights ^ 2))
+  grad2 <- sum(2 * q3 * (premium -  price) / (weights ^ 2))
+  grad3 <- sum(2 * q4 * (premium -  price) / (weights ^ 2))
+
+  ret <- c(grad1, grad2, grad3)
+  ret
+}
+
 #' Corrado-Su Model Fit in Implied Volatility
 #'
 #' Function to fit Corrado-Su modelo that minimizes the error in implied
@@ -404,6 +457,37 @@ csm_fit_min_vol <- function(par,
     par,
     fn = csm_obj_min_vol, gr = NULL,
     type, spot, strike, rate, yield, time, vol, weights,
+    lower = c(1e-1, -Inf, -Inf), upper = Inf,
+    method = "L-BFGS-B", ...
+  )
+
+  c(res$par[1], uncons_regionD(res$par[2], res$par[3]))
+}
+
+#' Corrado-Su Model Fit in Price
+#'
+#' Function to fit Corrado-Su modelo that minimizes the error in price.
+#'
+#' @param par a numeric value
+#' @param type option type: `Call` or `Put`
+#' @param spot a numeric value
+#' @param strike a numeric value
+#' @param rate a numeric value
+#' @param yield a numeric value
+#' @param time a numeric value
+#' @param price a numeric value
+#' @param weights a numeric value
+#' @param ... additional arguments passed to `optim`
+#'
+#' @importFrom stats optim
+#' @export
+csm_fit_min_price <- function(par,
+                              type, spot, strike, rate, yield, time,
+                              price, weights = 1, ...) {
+  res <- optim(
+    par,
+    fn = csm_obj_min_price, gr = csm_obj_grad_price,
+    type, spot, strike, rate, yield, time, price, weights,
     lower = c(1e-1, -Inf, -Inf), upper = Inf,
     method = "L-BFGS-B", ...
   )
