@@ -395,8 +395,8 @@ csm_obj_min_vol <- function(par,
 #'
 #' @export
 csm_obj_min_price <- function(par,
-                              type, spot, strike, rate, yield, time,
-                              price, weights = 1) {
+                              type, spot, strike, rate, yield, time, price,
+                              weights = 1) {
   sigma <- par[1]
   params <- uncons_regionD(par[2], par[3])
   mu3 <- params[1]
@@ -407,23 +407,25 @@ csm_obj_min_price <- function(par,
 
 #' @rdname csm_obj_min_price
 #' @export
-csm_obj_grad_price <- function(par, type, spot, strike, rate, time, price, weights) {
+csm_obj_grad_price <- function(par,
+                               type, spot, strike, rate, yield, time, price,
+                               weights = 1) {
   par_ <- uncons_regionD(par[2], par[3])
   par <- c(par[1], par_[1], par_[2])
 
   #numeric vega for Corrado-Su mod
   dcs.dsig <- csmvega(
-    type, spot, strike, time, rate, 0,
+    type, spot, strike, time, rate, yield,
     par[1], par[2], par[3]
   )
 
   #other derivatives for the gradient
   csmw_ <- csmw(par[1], time, par[2], par[3])
-  dmod <- csmd(spot, strike, time, rate, 0, par[1], csmw_)
+  dmod <- csmd(spot, strike, time, rate, yield, par[1], csmw_)
   q3 <- csmq3(spot, par[1], time, dmod, csmw_)
   q4 <- csmq4(spot, par[1], time, dmod, csmw_)
 
-  premium <- csmprice(type, spot, strike, time, rate, 0, par[1], par[2], par[3])
+  premium <- csmprice(type, spot, strike, time, rate, yield, par[1], par[2], par[3])
   grad1 <- sum(2 * dcs.dsig * (premium -  price) / (weights ^ 2))
   grad2 <- sum(2 * q3 * (premium -  price) / (weights ^ 2))
   grad3 <- sum(2 * q4 * (premium -  price) / (weights ^ 2))
@@ -487,9 +489,9 @@ csm_fit_min_price <- function(par,
   res <- optim(
     par,
     fn = csm_obj_min_price, gr = csm_obj_grad_price,
+    method = "L-BFGS-B",
     type, spot, strike, rate, yield, time, price, weights,
-    lower = c(1e-1, -Inf, -Inf), upper = Inf,
-    method = "L-BFGS-B", ...
+    ...
   )
 
   c(res$par[1], uncons_regionD(res$par[2], res$par[3]))
