@@ -17,7 +17,17 @@ csm_obj_min_price(
   weights = 1
 )
 
-csm_obj_grad_price(par, type, spot, strike, rate, time, price, weights)
+csm_obj_grad_price(
+  par,
+  type,
+  spot,
+  strike,
+  rate,
+  yield,
+  time,
+  price,
+  weights = 1
+)
 }
 \arguments{
 \item{par}{a numeric value}
