@@ -327,7 +327,7 @@ create_uncons_regionD <- function() {
   a <- -3
   start <- sqrt(3)
   end <- 100
-  x <- seq(start^a, end^a, length.out = 100)
+  x <- seq(start^a, end^a, length.out = 1000)
   x <- x ^ (1 / a)
   # calculate region D
   dm <- cbind(x = x, mu3 = mu3(x), mu4 = mu4(x))
@@ -337,13 +337,10 @@ create_uncons_regionD <- function() {
   function(mu3p, mu4p) {
     mu4 <- ff(mu4p, 3, 7)
     mu3_l <- rd_curve(mu4)
-    if (is.na(mu3_l)) {
-      c(0, mu4)
-    } else {
-      mu3_u <- -mu3_l
-      mu3 <- ff(mu3p, mu3_l, mu3_u)
-      c(mu3, mu4)
-    }
+    mu3_l[is.na(mu3_l)] <- 0
+    mu3_u <- -mu3_l
+    mu3 <- ff(mu3p, mu3_l, mu3_u)
+    cbind(mu3, mu4)
   }
 }
 
@@ -372,8 +369,8 @@ csm_obj_min_vol <- function(par,
                             vol, weights = 1) {
   sigma <- par[1]
   params <- uncons_regionD(par[2], par[3])
-  mu3 <- params[1]
-  mu4 <- params[2]
+  mu3 <- params[1, "mu3"]
+  mu4 <- params[1, "mu4"]
   pf <- csmprice(type, spot, strike, time, rate, yield, sigma, mu3, mu4)
   yf <- bsmimpvol(pf, type, spot, strike, time, rate, yield)
   sum(((yf - vol) * weights)^2, na.rm = TRUE)
@@ -399,8 +396,8 @@ csm_obj_min_price <- function(par,
                               weights = 1) {
   sigma <- par[1]
   params <- uncons_regionD(par[2], par[3])
-  mu3 <- params[1]
-  mu4 <- params[2]
+  mu3 <- params[1, "mu3"]
+  mu4 <- params[1, "mu4"]
   yf <- csmprice(type, spot, strike, time, rate, yield, sigma, mu3, mu4)
   sum(((yf - price) * weights)^2, na.rm = TRUE)
 }
@@ -411,7 +408,7 @@ csm_obj_grad_price <- function(par,
                                type, spot, strike, rate, yield, time, price,
                                weights = 1) {
   par_ <- uncons_regionD(par[2], par[3])
-  par <- c(par[1], par_[1], par_[2])
+  par <- c(par[1], par_[1, "mu3"], par_[1, "mu4"])
 
   #numeric vega for Corrado-Su mod
   dcs.dsig <- csmvega(
@@ -463,7 +460,10 @@ csm_fit_min_vol <- function(par,
     method = "L-BFGS-B", ...
   )
 
-  c(res$par[1], uncons_regionD(res$par[2], res$par[3]))
+  params <- uncons_regionD(res$par[2], res$par[3])
+  x <- c(res$par[1], params[1, "mu3"], params[1, "mu4"])
+  names(x) <- c("sigma", "mu3", "mu4")
+  x
 }
 
 #' Corrado-Su Model Fit in Price
@@ -494,5 +494,8 @@ csm_fit_min_price <- function(par,
     ...
   )
 
-  c(res$par[1], uncons_regionD(res$par[2], res$par[3]))
+  params <- uncons_regionD(res$par[2], res$par[3])
+  x <- c(res$par[1], params[1, "mu3"], params[1, "mu4"])
+  names(x) <- c("sigma", "mu3", "mu4")
+  x
 }
