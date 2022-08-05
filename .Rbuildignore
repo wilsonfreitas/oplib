@@ -4,3 +4,7 @@ legacy
 ^LICENSE\.md$
 ^README\.Rmd$
 examples
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

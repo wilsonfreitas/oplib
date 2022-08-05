@@ -1,0 +1,4 @@
+url: https://wilsonfreitas.github.io/oplib/
+template:
+  bootstrap: 5
+  bootswatch: flatly
