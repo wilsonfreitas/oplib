@@ -47,7 +47,7 @@ bsmprice("put", 20, 30, 0:4 / 2, 0.15, 0, 0.25)
 
 We can get option prices with {rb3} and compute their implied volatility.
 
-```{r rb3-options}
+```{r rb3-options, message=FALSE, warning=FALSE}
 library(rb3)
 library(bizdays)
 library(tidyverse)
