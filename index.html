@@ -92,18 +92,83 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wilsonfreitas/oplib" class="external-link">oplib</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"call"</span>, <span class="st">"put"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">49</span>, <span class="fl">48</span>, <span class="fl">47</span><span class="op">)</span>, <span class="fl">45</span>, <span class="fl">0.25</span>, <span class="fl">0.13</span>, <span class="fl">0.01</span>, <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span></span>
+<span>  type <span class="op">=</span> <span class="st">"put"</span>, spot <span class="op">=</span> <span class="fl">20</span>, strike <span class="op">=</span> <span class="fl">30</span>, time <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span> <span class="op">/</span> <span class="fl">2</span>,</span>
+<span>  rate <span class="op">=</span> <span class="fl">0.15</span>, yield <span class="op">=</span> <span class="fl">0</span>, sigma <span class="op">=</span> <span class="fl">0.25</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 7.882056 6.272936 5.098353 4.203993</span></span>
+<span><span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span></span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"call"</span>, <span class="st">"put"</span><span class="op">)</span>, spot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">49</span>, <span class="fl">48</span>, <span class="fl">47</span><span class="op">)</span>,</span>
+<span>  strike <span class="op">=</span> <span class="fl">45</span>, time <span class="op">=</span> <span class="fl">0.25</span>, rate <span class="op">=</span> <span class="fl">0.13</span>, yield <span class="op">=</span> <span class="fl">0.01</span>, sigma <span class="op">=</span> <span class="fl">0.2</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 6.5031266 0.2854164 4.7405597 0.6079959</span></span>
-<span><span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span><span class="st">"call"</span>, <span class="fl">50</span>, <span class="fl">45</span>, <span class="fl">0.25</span>, <span class="fl">0.13</span>, <span class="fl">0.01</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 6.316558 6.503127 7.012037 7.695351 8.464750</span></span>
-<span><span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span><span class="st">"put"</span>, <span class="fl">20</span>, <span class="fl">30</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">4</span> <span class="op">/</span> <span class="fl">2</span>, <span class="fl">0.15</span>, <span class="fl">0</span>, <span class="fl">0.25</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 10.000000  7.882056  6.272936  5.098353  4.203993</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span></span>
+<span>  type <span class="op">=</span> <span class="st">"call"</span>, spot <span class="op">=</span> <span class="fl">50</span>, strike <span class="op">=</span> <span class="fl">45</span>, time <span class="op">=</span> <span class="fl">0.25</span>, rate <span class="op">=</span> <span class="fl">0.13</span>, yield <span class="op">=</span> <span class="fl">0.01</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 6.316558 6.503127 7.012037 7.695351 8.464750</span></span></code></pre></div>
+<p>Works nicely with {tidyverse}.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">tibble</span><span class="op">(</span></span>
+<span>  type <span class="op">=</span> <span class="st">"call"</span>,</span>
+<span>  spot <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  strike <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">90</span>, <span class="fl">110</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  time <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  rate <span class="op">=</span> <span class="fl">0.02</span>,</span>
+<span>  yield <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">0.2</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">mutate</span><span class="op">(</span></span>
+<span>  price <span class="op">=</span> <span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span><span class="op">)</span>,</span>
+<span>  delta <span class="op">=</span> <span class="fu"><a href="reference/bsmgreeks.html">bsmdelta</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span><span class="op">)</span>,</span>
+<span>  gamma <span class="op">=</span> <span class="fu"><a href="reference/bsmgreeks.html">bsmgamma</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span><span class="op">)</span>,</span>
+<span>  rho <span class="op">=</span> <span class="fu"><a href="reference/bsmgreeks.html">bsmrho</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span><span class="op">)</span>,</span>
+<span>  vega <span class="op">=</span> <span class="fu"><a href="reference/bsmgreeks.html">bsmvega</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span><span class="op">)</span>,</span>
+<span>  theta <span class="op">=</span> <span class="fu"><a href="reference/bsmgreeks.html">bsmtheta</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span><span class="op">)</span>,</span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 5 x 13</span></span>
+<span><span class="co">#&gt;   type   spot strike  time  rate yield sigma price delta  gamma   rho  vega theta</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 call    100     90   0.5  0.02     0   0.2 12.5  0.812 0.0190  34.4  19.0 -5.18</span></span>
+<span><span class="co">#&gt; 2 call    100     95   0.5  0.02     0   0.2  8.95 0.693 0.0248  30.2  24.8 -6.18</span></span>
+<span><span class="co">#&gt; 3 call    100    100   0.5  0.02     0   0.2  6.12 0.556 0.0279  24.8  27.9 -6.58</span></span>
+<span><span class="co">#&gt; 4 call    100    105   0.5  0.02     0   0.2  3.99 0.419 0.0276  19.0  27.6 -6.29</span></span>
+<span><span class="co">#&gt; 5 call    100    110   0.5  0.02     0   0.2  2.47 0.297 0.0245  13.6  24.5 -5.44</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="pricing-equity-options-with-corrado-su-model">Pricing Equity Options with Corrado-Su Model<a class="anchor" aria-label="anchor" href="#pricing-equity-options-with-corrado-su-model"></a>
+</h3>
+<p>Corrado-Su model introduces skewness and kurtosis to option pricing formula.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">tibble</span><span class="op">(</span></span>
+<span>  type <span class="op">=</span> <span class="st">"call"</span>,</span>
+<span>  spot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">70</span>, <span class="fl">130</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  strike <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  time <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  rate <span class="op">=</span> <span class="fl">0.02</span>,</span>
+<span>  yield <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fl">0.2</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<span>    bsm_price <span class="op">=</span> <span class="fu"><a href="reference/bsmprice.html">bsmprice</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span><span class="op">)</span>,</span>
+<span>    csm_price <span class="op">=</span> <span class="fu"><a href="reference/csmprice.html">csmprice</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">spot</span>, <span class="va">strike</span>, <span class="va">time</span>, <span class="va">rate</span>, <span class="va">yield</span>, <span class="va">sigma</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">6</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu">pivot_longer</span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu">ends_with</span><span class="op">(</span><span class="st">"price"</span><span class="op">)</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"model"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"price"</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">spot</span>, y <span class="op">=</span> <span class="va">price</span>, color <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-corrado-su-example-1.png" width="100%"></p>
+<p>See that Corrado-Su modelo is cheaper than Black-Scholes for ATM options and expensive for OTM and ITM, as a consequence of the kurtosis.</p>
 </div>
 <div class="section level3">
 <h3 id="options-implied-volatility">Options Implied Volatility<a class="anchor" aria-label="anchor" href="#options-implied-volatility"></a>
 </h3>
-<p>We can get option prices with {rb3} and compute their implied volatility.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>We can get option prices with {rb3} and compute their implied volatility. Let’s start getting all PETR4 optoins.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wilsonfreitas/rb3" class="external-link">rb3</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wilsonfreitas/R-bizdays" class="external-link">bizdays</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
@@ -113,16 +178,24 @@
 <span><span class="va">yc</span> <span class="op">&lt;-</span> <span class="fu">yc_get</span><span class="op">(</span><span class="va">refdate</span><span class="op">)</span></span>
 <span><span class="va">op</span> <span class="op">&lt;-</span> <span class="fu">cotahist_equity_options_superset</span><span class="op">(</span><span class="va">ch</span>, <span class="va">yc</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">symbol_</span> <span class="op">&lt;-</span> <span class="st">"B3SA3"</span></span>
+<span><span class="va">symbol_</span> <span class="op">&lt;-</span> <span class="st">"PETR4"</span></span>
 <span><span class="va">op1</span> <span class="op">&lt;-</span> <span class="va">op</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
 <span>    <span class="va">symbol.underlying</span> <span class="op">==</span> <span class="va">symbol_</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="va">maturities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">op1</span><span class="op">$</span><span class="va">maturity_date</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">close_underlying</span> <span class="op">&lt;-</span> <span class="va">op1</span><span class="op">$</span><span class="va">close.underlying</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>Filter the first two available maturities.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">maturities</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">op1</span><span class="op">$</span><span class="va">maturity_date</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">op_vol</span> <span class="op">&lt;-</span> <span class="va">op1</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">maturity_date</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">maturities</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">op1</span> <span class="op">&lt;-</span> <span class="va">op1</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">maturity_date</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">maturities</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p>Compute implied volatility and delta of the options. Note that it is necessary to:</p>
+<ul>
+<li>compute business days <code>biz_days</code> to get <code>time_to_maturity</code> in years</li>
+<li>convert interest rate (<code>rate</code> column) to continuous rate</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">op_vol</span> <span class="op">&lt;-</span> <span class="va">op1</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span></span>
 <span>    biz_days <span class="op">=</span> <span class="fu">bizdays</span><span class="op">(</span></span>
 <span>      <span class="va">refdate</span>, <span class="fu">following</span><span class="op">(</span><span class="va">maturity_date</span>, <span class="st">"Brazil/B3"</span><span class="op">)</span>, <span class="st">"Brazil/B3"</span></span>
@@ -134,27 +207,94 @@
 <span>    <span class="op">)</span>,</span>
 <span>    delta <span class="op">=</span> <span class="fu"><a href="reference/bsmgreeks.html">bsmdelta</a></span><span class="op">(</span></span>
 <span>      <span class="va">type</span>, <span class="va">close.underlying</span>, <span class="va">strike</span>, <span class="va">time_to_maturity</span>, <span class="va">rate</span>, <span class="fl">0</span>, <span class="va">impvol</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    adj_delta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu">str_to_lower</span><span class="op">(</span><span class="va">type</span><span class="op">)</span> <span class="op">==</span> <span class="st">"call"</span>, <span class="va">delta</span>, <span class="fl">1</span> <span class="op">+</span> <span class="va">delta</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">select</span><span class="op">(</span></span>
-<span>    <span class="va">symbol</span>, <span class="va">volume</span>,</span>
-<span>    <span class="va">type</span>, <span class="va">close.underlying</span>, <span class="va">strike</span>, <span class="va">time_to_maturity</span>, <span class="va">rate</span>, <span class="va">impvol</span>,</span>
-<span>    <span class="va">delta</span>, <span class="va">adj_delta</span>, <span class="va">biz_days</span>, <span class="va">volume</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>Visualize with {ggplot2}</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">op_vol</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">impvol</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">adj_delta</span>, y <span class="op">=</span> <span class="va">impvol</span>, colour <span class="op">=</span> <span class="va">type</span>, size <span class="op">=</span> <span class="va">volume</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0.5</span>, alpha <span class="op">=</span> <span class="fl">0.5</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span> <span class="va">biz_days</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">delta</span>, y <span class="op">=</span> <span class="va">impvol</span>, size <span class="op">=</span> <span class="va">volume</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="va">type</span> <span class="op">~</span> <span class="va">biz_days</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">labs</span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="st">"Delta"</span>, y <span class="op">=</span> <span class="st">"Implied Volatility"</span>,</span>
 <span>    title <span class="op">=</span> <span class="fu">str_glue</span><span class="op">(</span><span class="st">"Equity Options Volatility - {symbol_} {format(refdate)}"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
+<p><img src="reference/figures/README-impvol-plot-1.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="fit-corrado-su-model-to-options-prices">Fit Corrado-Su Model to Options Prices<a class="anchor" aria-label="anchor" href="#fit-corrado-su-model-to-options-prices"></a>
+</h3>
+<p>Use options prices to find the parameters of Corrado-Su model. The function <code>csm_fit_min_price</code> executes the fit by minimizing the difference between the given prices and prices returned by the formula.</p>
+<p>Execute the fit only for the first maturity <strong>call</strong> options and see the result (fitted parameters) in the end.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">op_vol</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"Call"</span>, <span class="va">maturity_date</span> <span class="op">==</span> <span class="va">maturities</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="reference/csm_fit_min_price.html">csm_fit_min_price</a></span><span class="op">(</span></span>
+<span>    par <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>    <span class="va">type</span>, <span class="va">close.underlying</span>, <span class="va">strike</span>, <span class="va">rate</span>, <span class="fl">0</span>, <span class="va">time_to_maturity</span>, <span class="va">close</span>, <span class="fl">1</span>,</span>
+<span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>trace <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">#&gt; N = 3, M = 5 machine precision = 2.22045e-16</span></span>
+<span><span class="co">#&gt; This problem is unconstrained.</span></span>
+<span><span class="co">#&gt; At X0, 0 variables are exactly at the bounds</span></span>
+<span><span class="co">#&gt; At iterate     0  f=       3.9264  |proj g|=       18.082</span></span>
+<span><span class="co">#&gt; At iterate    10  f =      0.97023  |proj g|=        1.3768</span></span>
+<span><span class="co">#&gt; At iterate    20  f =      0.88965  |proj g|=      0.028646</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; iterations 25</span></span>
+<span><span class="co">#&gt; function evaluations 47</span></span>
+<span><span class="co">#&gt; segments explored during Cauchy searches 1</span></span>
+<span><span class="co">#&gt; BFGS updates skipped 0</span></span>
+<span><span class="co">#&gt; active bounds at final generalized Cauchy point 0</span></span>
+<span><span class="co">#&gt; norm of the final projected gradient 1.88873e-05</span></span>
+<span><span class="co">#&gt; final function value 0.889647</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; F = 0.889647</span></span>
+<span><span class="co">#&gt; final  value 0.889647 </span></span>
+<span><span class="co">#&gt; converged</span></span>
+<span></span>
+<span><span class="va">params</span></span>
+<span><span class="co">#&gt;      sigma        mu3        mu4 </span></span>
+<span><span class="co">#&gt;  0.3075525 -0.0836883  4.4146539</span></span></code></pre></div>
+<p>Compute the theoretical price with Corrado-Su model.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">op_csm_call</span> <span class="op">&lt;-</span> <span class="va">op_vol</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"Call"</span>, <span class="va">maturity_date</span> <span class="op">==</span> <span class="va">maturities</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<span>    theo_price <span class="op">=</span> <span class="fu"><a href="reference/csmprice.html">csmprice</a></span><span class="op">(</span></span>
+<span>      <span class="va">type</span>, <span class="va">close.underlying</span>, <span class="va">strike</span>, <span class="va">time_to_maturity</span>, <span class="va">rate</span>, <span class="fl">0</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">params</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">params</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">params</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>Visualize the given prices and model together in a plot.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">op_csm_call</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">strike</span>, y <span class="op">=</span> <span class="va">close</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">theo_price</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    y <span class="op">=</span> <span class="st">"Price"</span>,</span>
+<span>    title <span class="op">=</span> <span class="fu">str_glue</span><span class="op">(</span><span class="st">"{symbol_}/{format(maturities[1])} Calls Corrado-Su Model Fit"</span><span class="op">)</span>,</span>
+<span>    caption <span class="op">=</span> <span class="fu">str_glue</span><span class="op">(</span><span class="st">"Reference Date: {format(refdate)}"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-corrado-su-fit-example-1.png" width="100%"></p>
+<p>An interesting view is the relative error.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">op_csm_call</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">delta</span>, y <span class="op">=</span> <span class="op">(</span><span class="va">close</span> <span class="op">-</span> <span class="va">theo_price</span><span class="op">)</span> <span class="op">/</span> <span class="va">close</span><span class="op">)</span>, size <span class="op">=</span> <span class="va">volume</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span></span>
+<span>    y <span class="op">=</span> <span class="st">"Error"</span>,</span>
+<span>    title <span class="op">=</span> <span class="fu">str_glue</span><span class="op">(</span><span class="st">"{symbol_}/{format(maturities[1])} Calls Corrado-Su Model Fit Error"</span><span class="op">)</span>,</span>
+<span>    caption <span class="op">=</span> <span class="fu">str_glue</span><span class="op">(</span><span class="st">"Reference Date: {format(refdate)}"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va">percent</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Removed 26 rows containing missing values (geom_point).</span></span></code></pre></div>
+<p><img src="reference/figures/README-corrado-su-fit-error-example-1.png" width="100%"></p>
+<p>It is clear that OTM options have the greater error, mainly due to their small prices.</p>
 </div>
 </div>
 </div>
