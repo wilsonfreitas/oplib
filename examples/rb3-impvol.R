@@ -8,20 +8,14 @@ refdate <- getdate("last bizday", Sys.Date(), "Brazil/B3")
 ch <- cotahist_get(refdate, "daily")
 yc <- yc_get(refdate)
 
-op <- cotahist_equity_options_superset(ch, yc)
-
-symbol_ <- "AMAR3"
-op1 <- op |>
-  filter(
-    symbol.underlying == symbol_,
-    type == "Call"
-  )
+symbol_ <- "PETR4"
+op1 <- cotahist_options_by_symbol_superset(symbol_, ch, yc)
 
 maturities <- unique(op1$maturity_date) |> sort()
 close_underlying <- op1$close.underlying[1]
 
 op_vol <- op1 |>
-  filter(maturity_date %in% maturities) |>
+  filter(maturity_date %in% maturities[1]) |>
   mutate(
     biz_days = bizdays(
       refdate, following(maturity_date, "Brazil/ANBIMA"), "Brazil/ANBIMA"
@@ -48,7 +42,11 @@ op_vol |>
   geom_point() +
   geom_vline(xintercept = close_underlying, alpha = 0.5, size = 1) +
   facet_wrap(type ~ biz_days) +
-  theme(legend.position = "none")
+  theme(legend.position = "bottom") +
+  labs(
+    x = "Strike", y = "Implied Volatility",
+    title = str_glue("Equity Options Volatility - {symbol_} {format(refdate)}")
+  )
 
 op_vol |>
   filter(!is.na(impvol)) |>

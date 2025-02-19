@@ -61,12 +61,13 @@ op_vol <- op1 |>
     biz_days, close, high, low, bsm_impvol, delta
   )
 
+# call ----
 op_atm <- op_vol |>
   split(op_vol$refdate) |>
   map_dfr(function(df) {
     df_type <- df[df$type == "Call", ]
-    min_idx <- which.min(abs(abs(df_type$delta) - 0.75))
-    df[min_idx, ]
+    min_idx <- which.min(abs(abs(df_type$delta) - 0.5))
+    df_type[min_idx, ]
   })
 
 op_atm |>
@@ -74,3 +75,71 @@ op_atm |>
   geom_line() +
   geom_point() +
   geom_vline(xintercept = mats, color = "red")
+
+op_atm |>
+  ggplot(aes(x = refdate, y = strike)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = mats, color = "red")
+
+op_atm |>
+  ggplot(aes(x = refdate, y = delta)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = mats, color = "red")
+
+# put ----
+op_atm <- op_vol |>
+  split(op_vol$refdate) |>
+  map_dfr(function(df) {
+    df_type <- df[df$type == "Put", ]
+    min_idx <- which.min(abs(abs(df_type$delta) - 0.5))
+    df_type[min_idx, ]
+  })
+
+op_atm |>
+  ggplot(aes(x = refdate, y = bsm_impvol)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = mats, color = "red")
+
+op_atm |>
+  ggplot(aes(x = refdate, y = strike)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = mats, color = "red")
+
+op_atm |>
+  ggplot(aes(x = refdate, y = delta)) +
+  geom_line() +
+  geom_point() +
+  geom_vline(xintercept = mats, color = "red")
+
+# call + put ----
+op_atm <- op_vol |>
+  split(op_vol$refdate) |>
+  map_dfr(function(df) {
+    df_type <- df[df$type == "Put", ]
+    min_idx <- which.min(abs(abs(df_type$delta) - 0.5))
+    df1 <- df_type[min_idx, ]
+    df_type <- df[df$type == "Call", ]
+    min_idx <- which.min(abs(abs(df_type$delta) - 0.5))
+    df2 <- df_type[min_idx, ]
+    bind_rows(df1, df2)
+  })
+
+op_atm |>
+  ggplot(aes(x = refdate, y = bsm_impvol, colour = type)) +
+  geom_line() +
+  geom_point()
+
+op_atm |>
+  ggplot(aes(x = refdate, y = strike, colour = type)) +
+  geom_line() +
+  geom_point()
+
+op_atm |>
+  mutate(delta = ifelse(delta < 0, 1 + delta, delta)) |>
+  ggplot(aes(x = refdate, y = delta, colour = type)) +
+  geom_line() +
+  geom_point()
