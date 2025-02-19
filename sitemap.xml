@@ -1,105 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/404.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/index.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/annualize.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/as.variance.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/as.volatility.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/bsmd1.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/bsmgreeks.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/bsmimpvol.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/bsmmoneyness.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/bsmprice.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csm_fit_min_price.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csm_fit_min_vol.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csm_obj_min_price.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csm_obj_min_vol.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csmd.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csmdelta.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csmprice.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csmq3.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csmq4.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csmvega.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/csmw.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/daily.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/multiroot.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/oplib-package.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/print.multiroot.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/print.variance.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/print.volatility.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/svi_fit.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/svi_var.html</loc>
-  </url>
-  <url>
-    <loc>https://wilsonfreitas.github.io/oplib/reference/uncons-gram-charlier.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://wilsonfreitas.github.io/oplib/404.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/LICENSE-text.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/LICENSE.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/authors.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/index.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/annualize.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/as.variance.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/as.volatility.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/bsmd1.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/bsmgreeks.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/bsmimpvol.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/bsmmoneyness.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/bsmprice.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csm_fit_min_price.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csm_fit_min_vol.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csm_obj_min_price.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csm_obj_min_vol.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csmd.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csmdelta.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csmprice.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csmq3.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csmq4.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csmvega.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/csmw.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/daily.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/index.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/multiroot.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/oplib-package.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/print.multiroot.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/print.variance.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/print.volatility.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/svi_fit.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/svi_var.html</loc></url>
+<url><loc>https://wilsonfreitas.github.io/oplib/reference/uncons-gram-charlier.html</loc></url>
 </urlset>
+
