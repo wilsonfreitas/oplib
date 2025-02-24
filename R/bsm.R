@@ -131,12 +131,14 @@ bsmgreeks <- function(greeks = c("delta", "gamma", "vega", "rho", "theta"),
 #'
 #' @export
 bsmdelta <- function(type, spot, strike, time, rate, yield, sigma) {
-  d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
-  ifelse(
-    tolower(as.character(type)) == "call",
-    exp((-yield) * time) * pnorm(d1),
-    exp((-yield) * time) * (pnorm(d1) - 1)
-  )
+  data.frame(type, spot, strike, time, rate, yield, sigma) |> with({
+    d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
+    ifelse(
+      tolower(as.character(type)) == "call",
+      exp((-yield) * time) * pnorm(d1),
+      exp((-yield) * time) * (pnorm(d1) - 1)
+    )
+  })
 }
 
 #' @rdname bsmgreeks
@@ -152,9 +154,10 @@ bsmdelta <- function(type, spot, strike, time, rate, yield, sigma) {
 #' @importFrom stats dnorm
 #' @export
 bsmvega <- function(type, spot, strike, time, rate, yield, sigma) {
-  d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
-  result <- spot * exp((-yield) * time) * dnorm(d1) * sqrt(time)
-  result
+  data.frame(type, spot, strike, time, rate, yield, sigma) |> with({
+    d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
+    spot * exp((-yield) * time) * dnorm(d1) * sqrt(time)
+  })
 }
 
 #' @rdname bsmgreeks
@@ -170,9 +173,10 @@ bsmvega <- function(type, spot, strike, time, rate, yield, sigma) {
 #'
 #' @export
 bsmgamma <- function(type, spot, strike, time, rate, yield, sigma) {
-  d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
-  result <- exp((-yield) * time) * dnorm(d1) / (spot * sigma * sqrt(time))
-  result
+  data.frame(type, spot, strike, time, rate, yield, sigma) |> with({
+    d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
+    exp((-yield) * time) * dnorm(d1) / (spot * sigma * sqrt(time))
+  })
 }
 
 #' @rdname bsmgreeks
@@ -188,17 +192,19 @@ bsmgamma <- function(type, spot, strike, time, rate, yield, sigma) {
 #'
 #' @export
 bsmtheta <- function(type, spot, strike, time, rate, yield, sigma) {
-  d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
-  d2 <- d1 - sigma * sqrt(time)
-  Theta1 <- -(spot * exp((-yield) * time) * dnorm(d1) * sigma) /
-    (2 * sqrt(time))
-  ifelse(
-    tolower(as.character(type)) == "call",
-    Theta1 - (-yield) * spot * exp((-yield) * time) * pnorm(+d1) -
-      rate * strike * exp(-rate * time) * pnorm(+d2),
-    Theta1 + (-yield) * spot * exp((-yield) * time) * pnorm(-d1) +
-      rate * strike * exp(-rate * time) * pnorm(-d2)
-  )
+  data.frame(type, spot, strike, time, rate, yield, sigma) |> with({
+    d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
+    d2 <- d1 - sigma * sqrt(time)
+    Theta1 <- -(spot * exp((-yield) * time) * dnorm(d1) * sigma) /
+      (2 * sqrt(time))
+    ifelse(
+      tolower(as.character(type)) == "call",
+      Theta1 - (-yield) * spot * exp((-yield) * time) * pnorm(+d1) -
+        rate * strike * exp(-rate * time) * pnorm(+d2),
+      Theta1 + (-yield) * spot * exp((-yield) * time) * pnorm(-d1) +
+        rate * strike * exp(-rate * time) * pnorm(-d2)
+    )
+  })
 }
 
 #' @rdname bsmgreeks
@@ -214,22 +220,24 @@ bsmtheta <- function(type, spot, strike, time, rate, yield, sigma) {
 #'
 #' @export
 bsmrho <- function(type, spot, strike, time, rate, yield, sigma) {
-  d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
-  d2 <- d1 - sigma * sqrt(time)
-  CallPut <- bsmprice(type, spot, strike, time, rate, yield, sigma)
-  ifelse(
-    tolower(as.character(type)) == "call",
+  data.frame(type, spot, strike, time, rate, yield, sigma) |> with({
+    d1 <- bsmd1(spot, strike, time, rate, yield, sigma)
+    d2 <- d1 - sigma * sqrt(time)
+    CallPut <- bsmprice(type, spot, strike, time, rate, yield, sigma)
     ifelse(
-      rate - yield != 0,
-      time * strike * exp(-rate * time) * pnorm(d2),
-      -time * CallPut
-    ),
-    ifelse(
-      rate - yield != 0,
-      -time * strike * exp(-rate * time) * pnorm(-d2),
-      -time * CallPut
+      tolower(as.character(type)) == "call",
+      ifelse(
+        rate - yield != 0,
+        time * strike * exp(-rate * time) * pnorm(d2),
+        -time * CallPut
+      ),
+      ifelse(
+        rate - yield != 0,
+        -time * strike * exp(-rate * time) * pnorm(-d2),
+        -time * CallPut
+      )
     )
-  )
+  })
 }
 
 #' Computes a measure of moneyness for Black-Scholes-Merton model.
