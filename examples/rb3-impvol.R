@@ -1,4 +1,3 @@
-
 library(rb3)
 library(bizdays)
 library(tidyverse)
@@ -15,7 +14,7 @@ maturities <- unique(op1$maturity_date) |> sort()
 close_underlying <- op1$close.underlying[1]
 
 op_vol <- op1 |>
-  filter(maturity_date %in% maturities[1]) |>
+  filter(maturity_date %in% maturities[2]) |>
   mutate(
     biz_days = bizdays(
       refdate, following(maturity_date, "Brazil/ANBIMA"), "Brazil/ANBIMA"
@@ -36,6 +35,21 @@ op_vol <- op1 |>
     delta, adj_delta, biz_days, volume
   )
 
+with(
+  op1 |>
+    filter(maturity_date %in% maturities[2]) |>
+    mutate(
+      biz_days = bizdays(
+        refdate, following(maturity_date, "Brazil/ANBIMA"), "Brazil/ANBIMA"
+      ),
+      time_to_maturity = biz_days / 252,
+      rate = log(1 + r_252)
+    ),
+  bsmimpvol(
+    close, type, close.underlying, strike, time_to_maturity, rate, 0
+  )
+)
+
 op_vol |>
   filter(!is.na(impvol)) |>
   ggplot(aes(x = strike, y = impvol, colour = type, size = volume)) +
@@ -53,7 +67,7 @@ op_vol |>
   ggplot(aes(x = adj_delta, y = impvol, colour = type, size = volume)) +
   geom_point() +
   geom_vline(xintercept = 0.5, alpha = 0.5, size = 1) +
-  facet_wrap(~ biz_days) +
+  facet_wrap(~biz_days) +
   theme(legend.position = "bottom") +
   labs(
     x = "Delta", y = "Implied Volatility",
